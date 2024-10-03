@@ -1,0 +1,94 @@
+/* Estilos generales */
+body {
+    font-family: Arial, sans-serif;
+    background-color: white;
+    color: black;
+    margin: 0;
+    padding: 20px;
+    transition: background-color 0.3s, color 0.3s; /* Transición suave para modo oscuro */
+}
+
+/* Estilos para el modo oscuro */
+body.dark-mode {
+    background-color: #121212;
+    color: white;
+}
+
+h1 {
+    text-align: center;
+}
+
+#book-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Para adaptarse mejor en dispositivos móviles */
+}
+
+/* Estilos para los botones */
+button {
+    padding: 12px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px); /* Levanta el botón ligeramente al hacer hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+button:focus {
+    outline: none;
+}
+
+/* Estilos responsivos */
+@media (max-width: 768px) {
+    #book-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    iframe {
+        width: 100%;
+        height: 400px;
+    }
+
+    button {
+        width: 80%;
+        margin-bottom: 10px;
+    }
+}
+
+/* Estilo del botón de modo oscuro */
+#toggle-dark-mode {
+    display: block;
+    margin: 0 auto 20px auto;
+    padding: 12px 20px;
+    background-color: #333;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+}
+
+#toggle-dark-mode:hover {
+    background-color: #555;
+    transform: translateY(-2px); /* Levanta el botón ligeramente al hacer hover */
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+}
+
+/* Estilos para el iframe */
+iframe {
+    border: none;
+    overflow-y: auto; /* Permite desplazarse verticalmente dentro del iframe */
+}
