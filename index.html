@@ -9,7 +9,10 @@
 <body>
     <h1>Visor de Libros PDF</h1>
 
+    <!-- Botón para activar/desactivar modo oscuro -->
     <button id="toggle-dark-mode">Activar modo oscuro</button>
+
+    <!-- Contenedor de los botones de libros -->
     <div id="book-container"></div>
 
     <!-- Botones de navegación para cambiar de página -->
@@ -19,6 +22,7 @@
         <button id="next-page">Siguiente ➡️</button>
     </div>
 
+    <!-- Lienzo para renderizar el PDF -->
     <canvas id="pdf-render"></canvas>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
@@ -28,15 +32,28 @@
         const pageNumberSpan = document.getElementById('page-number');
         const canvas = document.getElementById('pdf-render');
         const ctx = canvas.getContext('2d');
+        const bookContainer = document.getElementById('book-container');
 
         let pdfDoc = null;
         let currentPage = 1;
         let totalPages = 0;
-
         const scale = 1.5;
 
         const books = ['libro1.pdf', 'libro2.pdf', 'libro3.pdf'];
         let selectedBook = localStorage.getItem('selectedBook') || books[0];
+
+        // Mostrar botones para cada libro
+        books.forEach(book => {
+            const bookButton = document.createElement('button');
+            bookButton.textContent = book;
+            bookButton.classList.add('book-button');
+            bookButton.addEventListener('click', () => {
+                selectedBook = book;
+                currentPage = 1;
+                loadPDF(`/${selectedBook}`);
+            });
+            bookContainer.appendChild(bookButton);
+        });
 
         // Función para renderizar la página
         const renderPage = async (num) => {
