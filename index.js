@@ -1,6 +1,7 @@
 const express = require('express');
 const path = require('path');
 const fs = require('fs');
+const pdfLib = require('pdf-lib'); // Usamos pdf-lib para manejar el PDF
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -12,45 +13,38 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'index.html'));
 });
 
-// Ruta para devolver la lista de libros en la carpeta /books
-app.get('/books', (req, res) => {
-    const booksDir = path.join(__dirname, 'books');
-    fs.readdir(booksDir, (err, files) => {
-        if (err) {
-            console.error("Error al leer la carpeta de libros:", err);
-            return res.status(500).send('Error al leer la carpeta de libros');
-        }
-        const pdfBooks = files.filter(file => file.endsWith('.pdf'));
-        if (pdfBooks.length === 0) {
-            return res.status(404).json({ error: 'No se encontraron libros PDF.' });
-        }
-        res.json(pdfBooks);
-    });
-});
-
-// Ruta para servir el PDF seleccionado
-app.get('/pdf', (req, res) => {
+// Ruta para servir páginas específicas de un PDF
+app.get('/pdf-viewer', async (req, res) => {
     const book = req.query.book;
-    if (!book) {
-        return res.status(400).send('Libro no seleccionado');
+    const page = parseInt(req.query.page, 10);
+
+    if (!book || isNaN(page)) {
+        return res.status(400).send('Libro o página no seleccionado');
     }
 
-    const filePath = path.join(__dirname, 'books', book);
-    console.log("Buscando archivo PDF en:", filePath);
-
+    const filePath = path.join(__dirname, 'public', book);
     if (!fs.existsSync(filePath)) {
-        console.error("Libro no encontrado:", filePath);
         return res.status(404).send('Libro no encontrado');
     }
 
-    res.contentType("application/pdf");
-    res.sendFile(filePath, (err) => {
-        if (err) {
-            console.error("Error al enviar el archivo PDF:", err);
-        } else {
-            console.log("Archivo PDF enviado correctamente:", filePath);
+    try {
+        const pdfBytes = fs.readFileSync(filePath);
+        const pdfDoc = await pdfLib.PDFDocument.load(pdfBytes);
+        const totalPages = pdfDoc.getPageCount();
+
+        if (page > totalPages || page < 1) {
+            return res.status(400).send('Página fuera de rango');
         }
-    });
+
+        const pdfPage = await pdfDoc.extractPages([page - 1]);
+        const pdfBytesPage = await pdfPage.save();
+
+        res.contentType("application/pdf");
+        res.send(pdfBytesPage);
+    } catch (error) {
+        console.error('Error al cargar el PDF:', error);
+        res.status(500).send('Error al cargar el PDF');
+    }
 });
 
 // Iniciar el servidor

@@ -12,13 +12,22 @@
     <button id="toggle-dark-mode">Activar modo oscuro</button>
     <div id="book-container"></div>
 
-    <iframe id="pdf-frame" src="" width="100%" height="600px" frameborder="0"></iframe>
+    <!-- Botones de navegación para cambiar de página en móviles -->
+    <div class="mobile-nav">
+        <button id="prev-page">⬅️ Anterior</button>
+        <button id="next-page">Siguiente ➡️</button>
+    </div>
+
+    <iframe id="pdf-frame" src="" frameborder="0"></iframe>
 
     <script>
         const iframe = document.getElementById('pdf-frame');
         const bookContainer = document.getElementById('book-container');
+        const prevButton = document.getElementById('prev-page');
+        const nextButton = document.getElementById('next-page');
         const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
         let selectedBook = localStorage.getItem('selectedBook') || null;
+        let currentPage = 1;
 
         // Lista de libros manualmente
         const books = ['libro1.pdf', 'libro2.pdf', 'libro3.pdf'];
@@ -30,25 +39,43 @@
             bookButton.classList.add('book-button');
             bookButton.setAttribute('data-book', book);
 
-            // Evento al hacer clic en un botón de libro
             bookButton.addEventListener('click', () => {
-                console.log("Botón de libro clicado:", book);
                 selectedBook = book;
-                iframe.src = `/${encodeURIComponent(book)}`;
-                console.log("Cargando PDF en iframe:", iframe.src);
+                currentPage = 1;
+                // Forzar la URL para cambiar de página utilizando #page=<numero>
+                iframe.src = `/${encodeURIComponent(book)}#page=${currentPage}`;
                 localStorage.setItem('selectedBook', selectedBook);
             });
 
             bookContainer.appendChild(bookButton);
         });
 
-        // Cargar el libro guardado si existe
-        if (selectedBook) {
-            iframe.src = `/${encodeURIComponent(selectedBook)}`;
-            console.log("Cargando libro guardado:", selectedBook);
+        // Función para cargar la página
+        function loadPage(page) {
+            iframe.src = `/${encodeURIComponent(selectedBook)}#page=${page}`;
+            console.log(`Cargando página: ${page}`);
         }
 
-        // Verificar si el modo oscuro está activado en localStorage
+        // Cambiar a la página anterior
+        prevButton.addEventListener('click', () => {
+            if (currentPage > 1) {
+                currentPage--;
+                loadPage(currentPage);
+            }
+        });
+
+        // Cambiar a la siguiente página
+        nextButton.addEventListener('click', () => {
+            currentPage++;
+            loadPage(currentPage);
+        });
+
+        // Cargar el libro guardado si existe
+        if (selectedBook) {
+            loadPage(currentPage);
+        }
+
+        // Modo oscuro
         const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
 
         if (darkModeEnabled) {
@@ -56,7 +83,6 @@
             toggleDarkModeButton.textContent = 'Desactivar modo oscuro';
         }
 
-        // Alternar entre modo oscuro y claro
         toggleDarkModeButton.addEventListener('click', () => {
             document.body.classList.toggle('dark-mode');
             if (document.body.classList.contains('dark-mode')) {
@@ -67,6 +93,32 @@
                 toggleDarkModeButton.textContent = 'Activar modo oscuro';
             }
         });
+
+        // Deslizar en móviles
+        iframe.addEventListener('touchstart', handleTouchStart, false);
+        iframe.addEventListener('touchmove', handleTouchMove, false);
+
+        let xStart = null;
+
+        function handleTouchStart(evt) {
+            const firstTouch = evt.touches[0];
+            xStart = firstTouch.clientX;
+        }
+
+        function handleTouchMove(evt) {
+            if (!xStart) return;
+
+            let xMove = evt.touches[0].clientX;
+            let xDiff = xStart - xMove;
+
+            if (xDiff > 0) {
+                nextButton.click(); // Deslizar a la izquierda -> página siguiente
+            } else {
+                prevButton.click(); // Deslizar a la derecha -> página anterior
+            }
+
+            xStart = null;
+        }
     </script>
 </body>
 </html>

@@ -5,10 +5,10 @@ body {
     color: black;
     margin: 0;
     padding: 20px;
-    transition: background-color 0.3s, color 0.3s; /* Transición suave para modo oscuro */
+    transition: background-color 0.3s, color 0.3s;
 }
 
-/* Estilos para el modo oscuro */
+/* Modo oscuro */
 body.dark-mode {
     background-color: #121212;
     color: white;
@@ -16,79 +16,98 @@ body.dark-mode {
 
 h1 {
     text-align: center;
+    margin-bottom: 20px;
 }
 
+/* Contenedor de libros */
 #book-container {
     display: flex;
     justify-content: center;
-    gap: 10px;
+    gap: 15px;
     margin-bottom: 20px;
-    flex-wrap: wrap; /* Para adaptarse mejor en dispositivos móviles */
+    flex-wrap: wrap;
 }
 
-/* Estilos para los botones */
-button {
-    padding: 12px 20px;
-    font-size: 16px;
-    cursor: pointer;
+/* Botones de libro */
+button.book-button {
+    padding: 15px 25px;
+    font-size: 18px;
     background-color: #007bff;
     color: white;
     border: none;
     border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
-button:hover {
+button.book-button:hover {
     background-color: #0056b3;
-    transform: translateY(-2px); /* Levanta el botón ligeramente al hacer hover */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
 }
 
-button:focus {
-    outline: none;
-}
-
-/* Estilos responsivos */
-@media (max-width: 768px) {
-    #book-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    iframe {
-        width: 100%;
-        height: 400px;
-    }
-
-    button {
-        width: 80%;
-        margin-bottom: 10px;
-    }
-}
-
-/* Estilo del botón de modo oscuro */
+/* Botón de modo oscuro */
 #toggle-dark-mode {
     display: block;
-    margin: 0 auto 20px auto;
-    padding: 12px 20px;
+    margin: 0 auto 20px;
+    padding: 15px 25px;
     background-color: #333;
     color: white;
     border: none;
     border-radius: 8px;
     cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s, transform 0.2s, box-shadow 0.3s;
+    transition: background-color 0.3s, transform 0.2s;
 }
 
 #toggle-dark-mode:hover {
     background-color: #555;
-    transform: translateY(-2px); /* Levanta el botón ligeramente al hacer hover */
-    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.15);
+    transform: translateY(-2px);
+}
+
+/* Navegación en móviles */
+.mobile-nav {
+    display: flex;
+    justify-content: space-around;
+    margin: 20px 0;
+}
+
+.mobile-nav button {
+    padding: 15px 25px;
+    font-size: 18px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.mobile-nav button:hover {
+    background-color: #45a049;
 }
 
 /* Estilos para el iframe */
 iframe {
+    width: 100%;
+    height: 600px;
     border: none;
-    overflow-y: auto; /* Permite desplazarse verticalmente dentro del iframe */
+    display: block;
+    margin: 0 auto;
+}
+
+/* Responsivo para móviles */
+@media (max-width: 768px) {
+    iframe {
+        height: 100vh;
+        width: 100vw; /* Ocupar toda la pantalla */
+    }
+
+    #book-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    button.book-button {
+        width: 90%;
+        margin-bottom: 10px;
+    }
 }
