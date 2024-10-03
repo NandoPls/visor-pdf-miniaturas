@@ -20,7 +20,9 @@
     <div id="next-page" class="side-button">➡️</div>
 
     <!-- Lienzo para renderizar el PDF -->
-    <canvas id="pdf-render"></canvas>
+    <div class="pdf-container">
+        <canvas id="pdf-render"></canvas>
+    </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.10.377/pdf.min.js"></script>
     <script>
@@ -77,7 +79,7 @@
             pdfDoc = pdf;
             totalPages = pdf.numPages;
 
-            // Renderizar la primera página o la página guardada
+            // Renderizar la página guardada
             renderPage(currentPage);
         };
 
@@ -114,11 +116,28 @@
             if (document.body.classList.contains('dark-mode')) {
                 localStorage.setItem('darkMode', 'enabled');
                 toggleDarkModeButton.textContent = 'Desactivar modo oscuro';
+                applyDarkModeToPDF(); // Aplicar modo oscuro al PDF
             } else {
                 localStorage.setItem('darkMode', 'disabled');
                 toggleDarkModeButton.textContent = 'Activar modo oscuro';
+                removeDarkModeFromPDF(); // Quitar modo oscuro del PDF
             }
         });
+
+        // Aplicar modo oscuro al PDF
+        const applyDarkModeToPDF = () => {
+            canvas.style.filter = 'invert(1) hue-rotate(180deg)';
+        };
+
+        // Quitar modo oscuro del PDF
+        const removeDarkModeFromPDF = () => {
+            canvas.style.filter = 'none';
+        };
+
+        // Verificar si el modo oscuro está activado al cargar la página
+        if (darkModeEnabled) {
+            applyDarkModeToPDF();
+        }
     </script>
 </body>
 </html>

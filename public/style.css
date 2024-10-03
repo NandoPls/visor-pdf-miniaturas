@@ -63,6 +63,17 @@ button.book-button:hover {
     transform: translateY(-2px);
 }
 
+/* Contenedor del PDF */
+.pdf-container {
+    position: relative;
+    width: 100%;
+    height: auto;
+    margin: 0 auto;
+    max-width: 900px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
 /* Botones de navegación a los costados */
 .side-button {
     position: absolute;
@@ -96,7 +107,6 @@ canvas {
     display: block;
     margin: 0 auto;
     max-width: 100%;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
 }
 
