@@ -15,12 +15,9 @@
     <!-- Contenedor de los botones de libros -->
     <div id="book-container"></div>
 
-    <!-- Botones de navegación para cambiar de página -->
-    <div class="mobile-nav">
-        <button id="prev-page">⬅️</button>
-        <span id="page-number">Página 1</span>
-        <button id="next-page">➡️</button>
-    </div>
+    <!-- Botones de navegación a los costados -->
+    <div id="prev-page" class="side-button">⬅️</div>
+    <div id="next-page" class="side-button">➡️</div>
 
     <!-- Lienzo para renderizar el PDF -->
     <canvas id="pdf-render"></canvas>
@@ -29,15 +26,14 @@
     <script>
         const prevButton = document.getElementById('prev-page');
         const nextButton = document.getElementById('next-page');
-        const pageNumberSpan = document.getElementById('page-number');
         const canvas = document.getElementById('pdf-render');
         const ctx = canvas.getContext('2d');
         const bookContainer = document.getElementById('book-container');
 
         let pdfDoc = null;
-        let currentPage = 1;
+        let currentPage = parseInt(localStorage.getItem('currentPage')) || 1;
         let totalPages = 0;
-        let scale = 1;  // Ajustaremos esto dinámicamente
+        let scale = 2;  // Escala mejorada para mayor calidad
 
         const books = ['libro1.pdf', 'libro2.pdf', 'libro3.pdf'];
         let selectedBook = localStorage.getItem('selectedBook') || books[0];
@@ -71,8 +67,8 @@
 
             page.render(renderContext);
 
-            // Actualizar el número de página
-            pageNumberSpan.textContent = `Página ${num}`;
+            // Guardar la página actual en localStorage
+            localStorage.setItem('currentPage', num);
         };
 
         // Cargar el PDF seleccionado
@@ -81,10 +77,7 @@
             pdfDoc = pdf;
             totalPages = pdf.numPages;
 
-            // Ajustar la escala dinámicamente según el tamaño de la ventana
-            adjustScale();
-
-            // Renderizar la primera página
+            // Renderizar la primera página o la página guardada
             renderPage(currentPage);
         };
 
@@ -106,19 +99,6 @@
 
         // Cargar el PDF seleccionado al abrir la página
         loadPDF(`/${selectedBook}`);
-
-        // Ajustar la escala del PDF según el tamaño de la pantalla
-        const adjustScale = () => {
-            const screenWidth = window.innerWidth;
-
-            if (screenWidth < 768) {
-                scale = 0.8; // Escala para móviles
-            } else {
-                scale = 1.2; // Escala para pantallas más grandes
-            }
-        };
-
-        window.addEventListener('resize', adjustScale);
 
         // Modo oscuro
         const toggleDarkModeButton = document.getElementById('toggle-dark-mode');

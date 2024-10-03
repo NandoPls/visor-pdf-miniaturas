@@ -63,31 +63,32 @@ button.book-button:hover {
     transform: translateY(-2px);
 }
 
-/* Navegación en móviles */
-.mobile-nav {
+/* Botones de navegación a los costados */
+.side-button {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    width: 15%;
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    margin: 20px 0;
-}
-
-.mobile-nav button {
-    padding: 10px 15px;
-    font-size: 18px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 6px;
+    justify-content: center;
+    font-size: 24px;
+    background-color: rgba(0, 0, 0, 0.1);
     cursor: pointer;
     transition: background-color 0.3s;
+    z-index: 10;
 }
 
-.mobile-nav button:hover {
-    background-color: #45a049;
+.side-button:hover {
+    background-color: rgba(0, 0, 0, 0.2);
 }
 
-#page-number {
-    font-size: 18px;
+#prev-page {
+    left: 0;
+}
+
+#next-page {
+    right: 0;
 }
 
 /* Estilos para el canvas donde se renderiza el PDF */
@@ -113,15 +114,6 @@ canvas {
 
     button.book-button {
         width: 100%;
-        margin-bottom: 10px;
-    }
-
-    .mobile-nav {
-        flex-direction: column;
-    }
-
-    .mobile-nav button {
-        width: 90%;
         margin-bottom: 10px;
     }
 }
