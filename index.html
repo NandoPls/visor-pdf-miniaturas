@@ -17,9 +17,9 @@
 
     <!-- Botones de navegación para cambiar de página -->
     <div class="mobile-nav">
-        <button id="prev-page">⬅️ Anterior</button>
+        <button id="prev-page">⬅️</button>
         <span id="page-number">Página 1</span>
-        <button id="next-page">Siguiente ➡️</button>
+        <button id="next-page">➡️</button>
     </div>
 
     <!-- Lienzo para renderizar el PDF -->
@@ -37,7 +37,7 @@
         let pdfDoc = null;
         let currentPage = 1;
         let totalPages = 0;
-        const scale = 1.5;
+        let scale = 1;  // Ajustaremos esto dinámicamente
 
         const books = ['libro1.pdf', 'libro2.pdf', 'libro3.pdf'];
         let selectedBook = localStorage.getItem('selectedBook') || books[0];
@@ -60,6 +60,7 @@
             const page = await pdfDoc.getPage(num);
             const viewport = page.getViewport({ scale });
 
+            // Redimensionar canvas al tamaño de la página
             canvas.height = viewport.height;
             canvas.width = viewport.width;
 
@@ -80,12 +81,12 @@
             pdfDoc = pdf;
             totalPages = pdf.numPages;
 
+            // Ajustar la escala dinámicamente según el tamaño de la ventana
+            adjustScale();
+
             // Renderizar la primera página
             renderPage(currentPage);
         };
-
-        // Cargar el PDF seleccionado al abrir la página
-        loadPDF(`/${selectedBook}`);
 
         // Cambiar a la página anterior
         prevButton.addEventListener('click', () => {
@@ -102,6 +103,22 @@
                 renderPage(currentPage);
             }
         });
+
+        // Cargar el PDF seleccionado al abrir la página
+        loadPDF(`/${selectedBook}`);
+
+        // Ajustar la escala del PDF según el tamaño de la pantalla
+        const adjustScale = () => {
+            const screenWidth = window.innerWidth;
+
+            if (screenWidth < 768) {
+                scale = 0.8; // Escala para móviles
+            } else {
+                scale = 1.2; // Escala para pantallas más grandes
+            }
+        };
+
+        window.addEventListener('resize', adjustScale);
 
         // Modo oscuro
         const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
