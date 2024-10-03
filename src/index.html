@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Visor de PDF</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <h1>Visor de PDF</h1>
+    <button id="toggle-dark-mode">Activar modo oscuro</button>
+
+    <!-- Contenedor de miniaturas -->
+    <div id="book-container"></div>
+
+    <iframe id="pdf-frame" src="" width="100%" height="600px"></iframe>
+
+    <script>
+        const iframe = document.getElementById('pdf-frame');
+        const bookContainer = document.getElementById('book-container');
+        let selectedBook = localStorage.getItem('selectedBook') || null;
+
+        // Cargar libros y miniaturas
+        fetch('/books')
+            .then(response => response.json())
+            .then(books => {
+                books.forEach(book => {
+                    const bookButton = document.createElement('button');
+                    bookButton.classList.add('book-button');
+                    bookButton.style.backgroundImage = `url('/thumbnails/${book.replace('.pdf', '.jpg')}')`;
+                    bookButton.setAttribute('data-book', book);
+
+                    // Evento al hacer clic en una miniatura
+                    bookButton.addEventListener('click', () => {
+                        selectedBook = book;
+                        iframe.src = `/pdf?book=${book}`;
+                        localStorage.setItem('selectedBook', selectedBook); // Guardar el libro seleccionado
+                    });
+
+                    bookContainer.appendChild(bookButton);
+                });
+
+                // Si hay un libro seleccionado previamente, cargarlo
+                if (selectedBook) {
+                    iframe.src = `/pdf?book=${selectedBook}`;
+                }
+            });
+
+        // Alternar modo oscuro
+        const darkModeEnabled = localStorage.getItem('darkMode') === 'enabled';
+        const body = document.body;
+        const button = document.getElementById('toggle-dark-mode');
+
+        if (darkModeEnabled) {
+            body.classList.add('dark-mode');
+            button.textContent = 'Desactivar modo oscuro';
+        }
+
+        button.addEventListener('click', () => {
+            body.classList.toggle('dark-mode');
+            if (body.classList.contains('dark-mode')) {
+                localStorage.setItem('darkMode', 'enabled');
+                button.textContent = 'Desactivar modo oscuro';
+            } else {
+                localStorage.removeItem('darkMode');
+                button.textContent = 'Activar modo oscuro';
+            }
+        });
+    </script>
+</body>
+</html>
