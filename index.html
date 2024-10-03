@@ -31,6 +31,7 @@
         const canvas = document.getElementById('pdf-render');
         const ctx = canvas.getContext('2d');
         const bookContainer = document.getElementById('book-container');
+        const pdfContainer = document.querySelector('.pdf-container');
 
         let pdfDoc = null;
         let currentPage = parseInt(localStorage.getItem('currentPage')) || 1;
@@ -88,6 +89,7 @@
             if (currentPage > 1) {
                 currentPage--;
                 renderPage(currentPage);
+                scrollToPDF(); // Subir automáticamente al inicio del PDF
             }
         });
 
@@ -96,11 +98,17 @@
             if (currentPage < totalPages) {
                 currentPage++;
                 renderPage(currentPage);
+                scrollToPDF(); // Subir automáticamente al inicio del PDF
             }
         });
 
         // Cargar el PDF seleccionado al abrir la página
         loadPDF(`/${selectedBook}`);
+
+        // Función para subir automáticamente al contenedor del PDF
+        const scrollToPDF = () => {
+            pdfContainer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        };
 
         // Modo oscuro
         const toggleDarkModeButton = document.getElementById('toggle-dark-mode');
@@ -109,6 +117,7 @@
         if (darkModeEnabled) {
             document.body.classList.add('dark-mode');
             toggleDarkModeButton.textContent = 'Desactivar modo oscuro';
+            applyDarkModeToPDF(); // Aplicar modo oscuro al PDF
         }
 
         toggleDarkModeButton.addEventListener('click', () => {

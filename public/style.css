@@ -88,6 +88,7 @@ button.book-button:hover {
     cursor: pointer;
     transition: background-color 0.3s;
     z-index: 10;
+    height: auto; /* Extender los botones hasta el final del contenedor */
 }
 
 .side-button:hover {
